@@ -15,6 +15,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     // Database Name
     private static final String DATABASE_NAME = "contactsManager";
+    private SQLiteDatabase db;
 
 
     public DatabaseHandler(Context context) {
@@ -42,7 +43,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Adding new contact
     void addContact(Contact contact) {
         if(contact!=null){
-            SQLiteDatabase db = this.getWritableDatabase();
+            db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put("nom", contact.nom==null?"": contact.nom); // Contact Name
             values.put("telephone", contact.telephone==null?"": contact.telephone);
@@ -55,7 +56,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Getting single contact
     Contact getContact(Integer id) {
         if(id!=null){
-            SQLiteDatabase db = this.getReadableDatabase();
+            db = this.getReadableDatabase();
             Cursor cursor = db.query("contacts", new String[] {"id",
                             "nom", "telephone" }, "id=?" ,
                     new String[] { String.valueOf(id) }, null, null,
@@ -75,7 +76,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         List<Contact> contactList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT * FROM contacts ";
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -94,9 +95,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void deleteContact(Integer id){
         if(id!=null){
-            SQLiteDatabase db=this.getWritableDatabase();
+            db=this.getWritableDatabase();
             String tabArgs[]={String.valueOf(id)};
-            db.delete("contact","_d=?",tabArgs);
+            db.delete("contact","id=?",tabArgs);
+            db.close();
+        }
+    }
+
+    public void updateContact(Contact contact){
+        if(contact!=null){
+            db=this.getWritableDatabase();
+            ContentValues values=new ContentValues();
+            values.put("nom", contact.nom==null?null: contact.nom);
+            values.put("telephone", contact.telephone==null?null: contact.telephone);
+            values.put("img", contact.img==null?null: contact.img);
+            String tabArgs[]={String.valueOf(contact.id)};
+            db.delete("contact","id=?",tabArgs);
             db.close();
         }
     }
