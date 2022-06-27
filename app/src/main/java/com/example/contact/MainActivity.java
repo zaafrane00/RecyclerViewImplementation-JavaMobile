@@ -27,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void getData(){
-        listData.add(new Contact ("hamza","zaafrane","123456789",R.mipmap.DSC_0712_Perfect365));
-        listData.add(new Contact ("hamza2","zaafrane2","123456789",R.mipmap.DSC_0712_Perfect365));
-        listData.add(new Contact ("hamza3","zaafrane3","123456789",R.mipmap.DSC_0712_Perfect365));
-        listData.add(new Contact ("hamza4","zaafrane4","123456789",R.mipmap.DSC_0712_Perfect365));
+        listData.add(new Contact ("zaafrane","123456789",R.mipmap.DSC_0712_Perfect365));
+        listData.add(new Contact ("zaafrane2","123456789",R.mipmap.DSC_0712_Perfect365));
+        listData.add(new Contact ("zaafrane3","123456789",R.mipmap.DSC_0712_Perfect365));
+        listData.add(new Contact ("zaafrane4","123456789",R.mipmap.DSC_0712_Perfect365));
         adapter.notifyDataSetChanged();
     }
 }

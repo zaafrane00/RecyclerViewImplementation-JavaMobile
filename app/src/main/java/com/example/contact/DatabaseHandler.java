@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    // All Static variables
+
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
@@ -24,7 +24,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE contacts(id" +
-                " INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,phone_number TEXT)";
+                " INTEGER PRIMARY KEY AUTOINCREMENT,nom TEXT,telephone TEXT)";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
     // Upgrading database
@@ -41,28 +41,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     // Adding new contact
     void addContact(Contact contact) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("nom", contact.nom); // Contact Name
-        values.put("telephone", contact.telephone);
-        db.insert("contacts", null, values);
-        db.close(); // Closing database connection
+        if(contact!=null){
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("nom", contact.nom==null?"": contact.nom); // Contact Name
+            values.put("telephone", contact.telephone==null?"": contact.telephone);
+            values.put("img", contact.img==null?null: contact.img);
+            db.insert("contacts", null, values);
+            db.close(); // Closing database connection
+        }
     }
 
     // Getting single contact
-    Contact getContact(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query("contacts", new String[] {"id",
-                        "nom", "telephone" }, "id=?" ,
-                new String[] { String.valueOf(id) }, null, null,
-                null, null);
-        if (cursor != null)
-            cursor.moveToFirst();
-        Contact contact = new Contact(Integer.parseInt(cursor.getString(0)
-        ), cursor.getString(1), cursor.getString(2));
-        // return contact
-        return contact;
+    Contact getContact(Integer id) {
+        if(id!=null){
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor cursor = db.query("contacts", new String[] {"id",
+                            "nom", "telephone" }, "id=?" ,
+                    new String[] { String.valueOf(id) }, null, null,
+                    null, null);
+            if (cursor != null)
+                cursor.moveToFirst();
+            Contact contact = new Contact(Integer.parseInt(cursor.getString(0)
+            ), cursor.getString(1), cursor.getString(2));
+            // return contact
+            return contact;
+        }
+        return null;
     }
+
     // Getting All Contacts
     public List<Contact> getAllContacts() {
         List<Contact> contactList = new ArrayList<>();
@@ -82,7 +89,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return contactList;
+        // return contact list
     }
-    // return contact list
+
+    public void deleteContact(Integer id){
+        if(id!=null){
+            SQLiteDatabase db=this.getWritableDatabase();
+            String tabArgs[]={String.valueOf(id)};
+            db.delete("contact","_d=?",tabArgs);
+            db.close();
+        }
+    }
 }
 
